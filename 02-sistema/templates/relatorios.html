@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatórios - Gerenciamento de Estoque</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<header>
+    <div class="container">
+        <h1>Sistema de Gerenciamento de Estoque</h1>
+
+        <nav>
+            <a href="{{ url_for('index') }}">Início</a>
+            <a href="{{ url_for('produtos') }}">Produtos</a>
+            <a href="{{ url_for('movimentacoes') }}">Movimentações</a>
+            <a href="{{ url_for('relatorios') }}">Relatórios</a>
+        </nav>
+    </div>
+</header>
+
+<main class="container">
+
+    <section class="hero">
+        <h2>Relatórios de Estoque</h2>
+        <p>
+            Consulte a situação atual dos produtos armazenados.
+        </p>
+    </section>
+
+    <section class="table-section">
+
+        <h2>Estoque Baixo</h2>
+
+        <p class="report-description">
+            Produtos com quantidade inferior a 5 unidades.
+        </p>
+
+        {% if estoque_baixo %}
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Produto</th>
+                        <th>Categoria</th>
+                        <th>Quantidade</th>
+                        <th>Localização</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for produto in estoque_baixo %}
+                    <tr>
+                        <td>{{ produto.nome }}</td>
+                        <td>{{ produto.categoria }}</td>
+                        <td>{{ produto.quantidade }}</td>
+                        <td>
+                            {{ produto.deposito }} /
+                            {{ produto.setor }} /
+                            {{ produto.posicao }}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {% else %}
+
+        <p>Nenhum produto com estoque baixo.</p>
+
+        {% endif %}
+
+    </section>
+
+    <section class="table-section">
+
+        <h2>Excesso de Estoque</h2>
+
+        <p class="report-description">
+            Produtos com quantidade superior a 50 unidades.
+        </p>
+
+        {% if excesso_estoque %}
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Produto</th>
+                        <th>Categoria</th>
+                        <th>Quantidade</th>
+                        <th>Localização</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for produto in excesso_estoque %}
+                    <tr>
+                        <td>{{ produto.nome }}</td>
+                        <td>{{ produto.categoria }}</td>
+                        <td>{{ produto.quantidade }}</td>
+                        <td>
+                            {{ produto.deposito }} /
+                            {{ produto.setor }} /
+                            {{ produto.posicao }}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {% else %}
+
+        <p>Nenhum produto com excesso de estoque.</p>
+
+        {% endif %}
+
+    </section>
+
+    <section class="table-section">
+
+        <h2>Posição Geral do Estoque</h2>
+
+        {% if produtos %}
+
+        <div class="table-container">
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Produto</th>
+                        <th>Categoria</th>
+                        <th>Quantidade</th>
+                        <th>Preço</th>
+                        <th>Localização</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for produto in produtos %}
+
+                    <tr>
+                        <td>{{ produto.nome }}</td>
+                        <td>{{ produto.categoria }}</td>
+                        <td>{{ produto.quantidade }}</td>
+                        <td>
+                            R$ {{ "%.2f"|format(produto.preco) }}
+                        </td>
+                        <td>
+                            {{ produto.deposito }} /
+                            {{ produto.setor }} /
+                            {{ produto.posicao }}
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+            </table>
+
+        </div>
+
+        {% else %}
+
+        <p>Nenhum produto cadastrado.</p>
+
+        {% endif %}
+
+    </section>
+
+</main>
+
+</body>
+</html>

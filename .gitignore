@@ -5,3 +5,10 @@ venv/
 .env
 *.db
 .vscode/
+
+# Banco de dados local
+02-sistema/database/*.db
+
+# Python
+__pycache__/
+*.pyc

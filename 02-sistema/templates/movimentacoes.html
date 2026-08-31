@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movimentações - Gerenciamento de Estoque</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<header>
+    <div class="container">
+        <h1>Sistema de Gerenciamento de Estoque</h1>
+
+        <nav>
+            <a href="{{ url_for('index') }}">Início</a>
+            <a href="{{ url_for('produtos') }}">Produtos</a>
+            <a href="{{ url_for('movimentacoes') }}">Movimentações</a>
+            <a href="{{ url_for('relatorios') }}">Relatórios</a>
+        </nav>
+    </div>
+</header>
+
+<main class="container">
+
+    <section class="hero">
+        <h2>Movimentação de Estoque</h2>
+        <p>Registre entradas e saídas de produtos.</p>
+    </section>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="message {{ category }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <section class="form-section">
+
+        <h2>Nova Movimentação</h2>
+
+        <form action="{{ url_for('registrar_movimentacao') }}" method="POST">
+
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label for="produto_id">Produto</label>
+
+                    <select id="produto_id" name="produto_id" required>
+                        <option value="">Selecione</option>
+
+                        {% for produto in produtos %}
+                            <option value="{{ produto.id }}">
+                                {{ produto.nome }}
+                                (estoque: {{ produto.quantidade }})
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="tipo">Tipo</label>
+
+                    <select id="tipo" name="tipo" required>
+                        <option value="">Selecione</option>
+                        <option value="ENTRADA">Entrada</option>
+                        <option value="SAIDA">Saída</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="quantidade">Quantidade</label>
+
+                    <input
+                        type="number"
+                        id="quantidade"
+                        name="quantidade"
+                        min="1"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="responsavel">Responsável</label>
+
+                    <input
+                        type="text"
+                        id="responsavel"
+                        name="responsavel"
+                        required
+                    >
+                </div>
+
+            </div>
+
+            <button type="submit" class="button">
+                Registrar Movimentação
+            </button>
+
+        </form>
+
+    </section>
+
+    <section class="table-section">
+
+        <h2>Histórico de Movimentações</h2>
+
+        {% if movimentacoes %}
+
+        <div class="table-container">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Produto</th>
+                        <th>Tipo</th>
+                        <th>Quantidade</th>
+                        <th>Data</th>
+                        <th>Responsável</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for movimentacao in movimentacoes %}
+
+                    <tr>
+                        <td>{{ movimentacao.id }}</td>
+                        <td>{{ movimentacao.produto }}</td>
+                        <td>{{ movimentacao.tipo }}</td>
+                        <td>{{ movimentacao.quantidade }}</td>
+                        <td>{{ movimentacao.data }}</td>
+                        <td>{{ movimentacao.responsavel }}</td>
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        {% else %}
+
+        <p>Nenhuma movimentação registrada.</p>
+
+        {% endif %}
+
+    </section>
+
+</main>
+
+</body>
+</html>
